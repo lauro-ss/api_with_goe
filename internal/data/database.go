@@ -16,9 +16,15 @@ type Database struct {
 	*goe.DB
 }
 
-func InitDatabase(dns string) *Database {
+func OpenAndMigrate(dns string) (*Database, error) {
 	db := &Database{DB: &goe.DB{}}
-	goe.Open(db, postgres.Open(dns))
-	db.Migrate(goe.MigrateFrom(db))
-	return db
+	err := goe.Open(db, postgres.Open(dns))
+	if err != nil {
+		return nil, err
+	}
+	err = db.Migrate(goe.MigrateFrom(db))
+	if err != nil {
+		return nil, err
+	}
+	return db, nil
 }

@@ -9,9 +9,17 @@ import (
 	"os/signal"
 	"syscall"
 	"time"
+
+	"github.com/lauro-ss/api_with_goe/internal/data"
 )
 
 func main() {
+	dns := "user=postgres password=postgres host=localhost port=5432 database=postgres"
+	db, err := data.OpenAndMigrate(dns)
+	if err != nil {
+		log.Fatal(err)
+	}
+
 	mux := http.NewServeMux()
 
 	mux.HandleFunc("GET /", func(w http.ResponseWriter, r *http.Request) {
