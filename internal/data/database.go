@@ -7,7 +7,7 @@ import (
 
 type User struct {
 	Id       uint
-	Name     uint
+	Name     string
 	Password string `goe:"type:varchar(64)"`
 }
 

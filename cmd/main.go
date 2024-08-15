@@ -26,13 +26,15 @@ func main() {
 	mux := http.NewServeMux()
 
 	mux.HandleFunc("GET /user", handlers.UserList(userRepository))
+	mux.HandleFunc("GET /user/:id", handlers.UserGet(userRepository))
 	mux.HandleFunc("POST /user", handlers.UserCreate(userRepository))
 	mux.HandleFunc("PUT /user/:id", handlers.UserUpdate(userRepository))
 	mux.HandleFunc("DELETE /user/:id", handlers.UserDelete(userRepository))
 
 	server := http.Server{
-		Addr:    ":8080",
-		Handler: mux,
+		Addr:         ":8080",
+		Handler:      mux,
+		WriteTimeout: 2 * time.Second,
 	}
 
 	go func() {
