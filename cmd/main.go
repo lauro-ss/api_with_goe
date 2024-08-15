@@ -11,6 +11,8 @@ import (
 	"time"
 
 	"github.com/lauro-ss/api_with_goe/internal/data"
+	"github.com/lauro-ss/api_with_goe/internal/handlers"
+	"github.com/lauro-ss/api_with_goe/internal/service"
 )
 
 func main() {
@@ -19,12 +21,14 @@ func main() {
 	if err != nil {
 		log.Fatal(err)
 	}
+	userRepository := service.NewUserRepository(db)
 
 	mux := http.NewServeMux()
 
-	mux.HandleFunc("GET /", func(w http.ResponseWriter, r *http.Request) {
-		w.Write([]byte("Hello World"))
-	})
+	mux.HandleFunc("GET /user", handlers.UserList(userRepository))
+	mux.HandleFunc("POST /user", handlers.UserCreate(userRepository))
+	mux.HandleFunc("PUT /user/:id", handlers.UserUpdate(userRepository))
+	mux.HandleFunc("DELETE /user/:id", handlers.UserDelete(userRepository))
 
 	server := http.Server{
 		Addr:    ":8080",
